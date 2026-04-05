@@ -4,7 +4,10 @@ const {
   getCart,
   updateCart,
   removeFromCart,
+  mergeCart,
+  clearCart
 } = require("../controllers/cartController");
+
 
 const { protect } = require("../middlewares/authMiddleware");
 
@@ -14,5 +17,7 @@ router.post("/", protect, addToCart);
 router.get("/", protect, getCart);
 router.put("/:productId", protect, updateCart);
 router.delete("/:productId", protect, removeFromCart);
+router.post("/merge", protect, mergeCart);
+router.delete("/", protect, clearCart);
 
 module.exports = router;
