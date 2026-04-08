@@ -3,7 +3,23 @@ const Product = require("../models/Product");
 // GET /api/products
 const getProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const { search = "", category = "" } = req.query;
+
+    const query = {};
+
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { info: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    if (category) {
+      query.category = { $regex: category, $options: "i" };
+    }
+
+    const products = await Product.find(query).sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
